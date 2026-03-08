@@ -1,6 +1,7 @@
 import ProjectsCarousel from '../components/common/ProjectsCarousel';
 import SiteHeader from '../components/layout/SiteHeader';
 import { projects, stats } from '../constants/homePageData';
+import { Link } from 'react-router-dom';
 import './HomePage.css';
 
 function HomePage() {
@@ -23,9 +24,9 @@ function HomePage() {
                 <button type="button" className="btn btn-outline">
                   Browse Projects
                 </button>
-                <button type="button" className="btn btn-primary">
+                <Link to="/signup" className="btn btn-primary">
                   Sign up
-                </button>
+                </Link>
               </div>
             </div>
 
@@ -113,9 +114,9 @@ function HomePage() {
         <div className="home-cta-wrap">
           <h2>Ready to make a difference?</h2>
           <p>Get involved today and help us build a better community.</p>
-          <button type="button" className="btn btn-primary btn-small">
+          <Link to="/signup" className="btn btn-primary btn-small">
             Join Us
-          </button>
+          </Link>
         </div>
       </section>
     </main>

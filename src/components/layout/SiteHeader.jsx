@@ -11,9 +11,9 @@ function SiteHeader() {
         <a href="/#about">About us</a>
         <a href="/#organizations">Organizations</a>
         <Link to="/contactus">Contact</Link>
-        <button type="button" className="btn btn-primary btn-small">
+        <Link to="/login" className="btn btn-primary btn-small">
           Sign in
-        </button>
+        </Link>
       </nav>
     </header>
   );
