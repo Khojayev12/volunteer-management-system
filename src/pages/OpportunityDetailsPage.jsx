@@ -54,7 +54,7 @@ function OpportunityDetailsPage() {
               <span className="details-logo-placeholder" aria-hidden="true">
                 logo
               </span>
-              {opportunity.organization}
+              <span>{opportunity.organization}</span>
             </p>
           </div>
 
