@@ -21,9 +21,9 @@ function HomePage() {
                 Start your journey with us today.
               </p>
               <div className="hero-actions">
-                <button type="button" className="btn btn-outline">
+                <Link to="/home" className="btn btn-outline">
                   Browse Projects
-                </button>
+                </Link>
                 <Link to="/signup" className="btn btn-primary">
                   Sign up
                 </Link>

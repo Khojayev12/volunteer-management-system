@@ -42,16 +42,6 @@ function SignUpPage() {
           </label>
 
           <label>
-            Location
-            <select defaultValue="Addis Ababa">
-              <option>Addis Ababa</option>
-              <option>Hawassa</option>
-              <option>Adama</option>
-              <option>Bahir Dar</option>
-            </select>
-          </label>
-
-          <label>
             Password
             <input type="password" defaultValue="**************" />
           </label>
