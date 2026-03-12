@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import './OpportunityCard.css';
 
 function OpportunityCard({ id, title, organization, description, badges }) {
   return (

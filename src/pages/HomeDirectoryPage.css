@@ -1,89 +1,23 @@
 .home-directory-page {
   min-height: 100vh;
-  background: #f4f4f4;
-  color: #1f1f1f;
-}
-
-.home-top-bar {
-  height: 78px;
-  background: #c8deed;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 0 44px;
-}
-
-.home-top-brand {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  font-size: 2rem;
-  color: #2f2f2f;
-}
-
-.brand-mark {
-  width: 28px;
-  height: 28px;
-  border-radius: 50%;
-  border: 2px dashed #4f6679;
-  display: grid;
-  place-items: center;
-  font-size: 0.62rem;
-  background: #eef5fa;
-}
-
-.home-top-actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.home-top-search input {
-  width: 420px;
-  height: 38px;
-  border: 1px solid #7b8e9e;
-  border-radius: 4px;
-  padding: 0 12px;
-  font-size: 0.9rem;
-  background: #d6e7f2;
-}
-
-.icon-button {
-  border: none;
-  background: transparent;
-  color: #2f2f2f;
-  font-size: 0.8rem;
-  text-transform: uppercase;
-  cursor: pointer;
-}
-
-.avatar-placeholder {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 2px dashed #4f6679;
-  display: grid;
-  place-items: center;
-  font-size: 0.75rem;
-  color: #3e5568;
-  background: #eef5fa;
+  background: var(--color-bg-page);
+  color: var(--color-text-primary);
 }
 
 .home-directory-content {
-  max-width: 1180px;
+  max-width: var(--container-lg);
   margin: 28px auto;
   display: grid;
   grid-template-columns: 330px 1fr;
-  gap: 22px;
+  gap: 20px;
   padding: 0 14px 32px;
 }
 
 .filters-panel {
-  background: #fafafa;
-  border: 1px solid #e2e2e2;
-  border-radius: 3px;
-  padding: 18px 18px 12px;
+  background: var(--color-surface-muted);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  padding: 18px 18px 14px;
 }
 
 .filters-title-row {
@@ -94,15 +28,17 @@
 
 .filters-title-row h1 {
   margin: 0;
-  font-size: 1.95rem;
-  font-weight: 500;
+  font-size: 1.7rem;
+  font-weight: 700;
+  line-height: 1.15;
 }
 
 .clear-button {
   border: none;
   background: transparent;
-  color: #79bfe4;
+  color: var(--color-brand);
   font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
 }
 
@@ -118,15 +54,17 @@
   align-items: center;
   gap: 8px;
   border: none;
-  border-radius: 16px;
+  border-radius: var(--radius-round);
   padding: 6px 10px;
-  font-size: 0.95rem;
-  background: #e5e5e5;
-  color: #2b2b2b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  background: #dde8ef;
+  color: #28404f;
+  cursor: pointer;
 }
 
 .filter-tag-close {
-  font-size: 0.9rem;
+  font-size: 0.86rem;
 }
 
 .filter-group {
@@ -135,10 +73,10 @@
 
 .filter-group h3 {
   margin: 0;
-  border-bottom: 1px solid #737373;
+  border-bottom: 1px solid #738391;
   padding-bottom: 8px;
-  font-size: 1.4rem;
-  font-weight: 500;
+  font-size: 1.15rem;
+  font-weight: 700;
 }
 
 .filter-group-body {
@@ -151,7 +89,8 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 1.05rem;
+  font-size: 0.95rem;
+  color: #253541;
 }
 
 .control-row input {
@@ -167,140 +106,31 @@
   display: grid;
   grid-template-columns: 1fr 130px;
   gap: 10px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid #d7d7d7;
+  padding: 10px 0 14px;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .project-search-bar input {
-  height: 40px;
-  border: 1px solid #7c7c7c;
-  border-radius: 3px;
-  padding: 0 10px;
-  font-size: 1rem;
+  border-color: var(--color-border-strong);
 }
 
 .search-btn {
-  border: none;
-  border-radius: 3px;
-  background: #0b7298;
-  color: #ffffff;
-  font-size: 1rem;
-  cursor: pointer;
+  width: 100%;
 }
 
 .opportunities-list {
   display: grid;
-  gap: 10px;
-}
-
-.opportunity-card {
-  border: 1px solid #ececec;
-  background: #ffffff;
-  border-radius: 3px;
-  padding: 16px;
-}
-
-.opportunity-card-link {
-  text-decoration: none;
-  color: inherit;
-}
-
-.opportunity-card-link .opportunity-card {
-  transition: border-color 180ms ease, box-shadow 180ms ease;
-}
-
-.opportunity-card-link:hover .opportunity-card,
-.opportunity-card-link:focus-visible .opportunity-card {
-  border-color: #8ec3de;
-  box-shadow: 0 10px 18px rgba(24, 72, 105, 0.1);
-}
-
-.opportunity-header {
-  display: flex;
-  gap: 14px;
-  align-items: flex-start;
-}
-
-.logo-placeholder {
-  width: 54px;
-  height: 54px;
-  border-radius: 50%;
-  border: 2px dashed #4082ac;
-  display: grid;
-  place-items: center;
-  font-size: 1rem;
-  color: #2e6c92;
-  flex-shrink: 0;
-  background: #eef6fb;
-}
-
-.opportunity-card h2 {
-  margin: 0;
-  font-size: 2rem;
-  font-weight: 600;
-  line-height: 1.2;
-}
-
-.organization-name {
-  margin: 4px 0 0;
-  font-size: 1.4rem;
-  color: #2a2a2a;
-}
-
-.opportunity-description {
-  margin: 14px 0;
-  font-size: 1rem;
-  line-height: 1.45;
-  color: #303030;
-}
-
-.badge-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-}
-
-.badge-pill {
-  border-radius: 14px;
-  padding: 4px 10px;
-  font-size: 0.82rem;
-  background: #b9ddf2;
-  color: #184869;
+  gap: 12px;
 }
 
 @media (max-width: 1024px) {
   .home-directory-content {
     grid-template-columns: 1fr;
   }
-
-  .home-top-bar {
-    padding: 0 14px;
-    flex-wrap: wrap;
-    height: auto;
-    gap: 10px;
-    padding-top: 10px;
-    padding-bottom: 10px;
-  }
-
-  .home-top-search input {
-    width: min(420px, 60vw);
-  }
 }
 
 @media (max-width: 640px) {
   .project-search-bar {
     grid-template-columns: 1fr;
-  }
-
-  .home-top-actions {
-    width: 100%;
-  }
-
-  .home-top-search {
-    width: 100%;
-  }
-
-  .home-top-search input {
-    width: 100%;
   }
 }

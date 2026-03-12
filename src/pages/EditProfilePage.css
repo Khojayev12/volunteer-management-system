@@ -1,0 +1,344 @@
+.edit-right-column {
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.edit-heading-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
+  color: var(--color-text-strong);
+  font-size: 1.7rem;
+  font-weight: 700;
+}
+
+.edit-back-link {
+  color: #2f2f2f;
+  text-decoration: none;
+  font-size: 1.15rem;
+}
+
+.edit-card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+  padding: 14px 16px 18px;
+}
+
+.profile-picture-card {
+  display: grid;
+  gap: 10px;
+}
+
+.edit-photo-placeholder {
+  width: 112px;
+  height: 112px;
+  border-radius: 50%;
+  border: 3px dashed #4c6e84;
+  background: #eff6fb;
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
+  color: #38576b;
+}
+
+.edit-photo-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.photo-btn {
+  border: 1px solid #9eaab3;
+  border-radius: var(--radius-sm);
+  background: #ffffff;
+  height: 36px;
+  padding: 0 12px;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color var(--transition-standard),
+    border-color var(--transition-standard);
+}
+
+.photo-btn:hover,
+.photo-btn:focus-visible {
+  background: #f5f8fb;
+  border-color: #7f95a6;
+}
+
+.photo-btn.update {
+  color: #4f8db5;
+}
+
+.photo-btn.remove {
+  border-color: transparent;
+  color: #eb6a52;
+}
+
+.form-grid {
+  display: grid;
+  gap: 14px 16px;
+}
+
+.form-grid.two-col {
+  grid-template-columns: 1fr 1fr;
+}
+
+.form-grid.single-col {
+  grid-template-columns: 1fr;
+}
+
+.form-grid.split-small {
+  grid-template-columns: 1fr 150px;
+}
+
+.field {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+}
+
+.field span {
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: #505f69;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.edit-card .field + .form-grid,
+.edit-card .form-grid + .field,
+.edit-card .form-grid + .form-grid {
+  margin-top: 18px;
+}
+
+.field input,
+.field select,
+.field textarea {
+  width: 100%;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  min-height: 42px;
+  padding: 9px 12px;
+  font-size: 0.98rem;
+  font-family: inherit;
+  color: #2b3842;
+  background: var(--color-surface);
+}
+
+.field textarea {
+  resize: vertical;
+  min-height: 96px;
+}
+
+.field.short {
+  max-width: 330px;
+}
+
+.social-edit-list {
+  display: grid;
+  gap: 14px;
+}
+
+.social-edit-row {
+  display: grid;
+  grid-template-columns: 160px 1fr 36px;
+  align-items: center;
+  gap: 0;
+}
+
+.social-edit-label {
+  min-height: 40px;
+  border: 1px solid #7e8e9b;
+  border-right: none;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+  font-size: 0.94rem;
+  font-weight: 600;
+  background: #f8fbfd;
+}
+
+.social-edit-icon {
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  border: 1px solid #768897;
+  display: grid;
+  place-items: center;
+  font-size: 0.6rem;
+  color: #4f6679;
+  background: #f2f7fb;
+}
+
+.social-edit-row input {
+  min-height: 40px;
+  border: 1px solid #7e8e9b;
+  border-radius: 0;
+  padding: 0 11px;
+  font-size: 0.95rem;
+}
+
+.remove-item-btn {
+  border: none;
+  background: transparent;
+  font-size: 1.6rem;
+  font-weight: 700;
+  line-height: 1;
+  color: #31414c;
+  cursor: pointer;
+}
+
+.add-link-btn {
+  margin-top: 16px;
+  border: none;
+  background: transparent;
+  color: var(--color-brand);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.skills-edit-list {
+  display: grid;
+  gap: 18px;
+}
+
+.skill-edit-row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.skill-edit-row h3 {
+  margin: 0 0 6px;
+  font-size: 1.3rem;
+}
+
+.skill-edit-row p {
+  margin: 0;
+  color: #2f3d47;
+  font-size: 0.94rem;
+}
+
+.add-skill-wrap {
+  margin-top: 18px;
+}
+
+.add-skill-wrap p {
+  margin: 0 0 8px;
+  font-size: 0.95rem;
+  color: #4a5965;
+}
+
+.add-skill-wrap input {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--color-border-strong);
+  border-radius: var(--radius-sm);
+  padding: 0 11px;
+  font-size: 0.95rem;
+}
+
+.education-list {
+  display: grid;
+  gap: 22px;
+}
+
+.education-item h3 {
+  margin: 0 0 8px;
+  font-size: 1.35rem;
+}
+
+.education-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.education-meta {
+  margin: 0;
+  font-size: 0.86rem;
+  color: #2f3d47;
+}
+
+.education-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.education-actions button {
+  border: none;
+  background: transparent;
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #21333f;
+}
+
+.education-description {
+  margin: 10px 0 0;
+  font-size: 0.92rem;
+  line-height: 1.55;
+  color: #2f3d47;
+}
+
+.education-footer {
+  margin-top: 18px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.add-education-btn {
+  min-height: 44px;
+  padding-inline: 18px;
+}
+
+.edit-page-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.save-btn,
+.cancel-btn {
+  min-height: 44px;
+  padding-inline: 16px;
+}
+
+@media (max-width: 1024px) {
+  .form-grid.two-col,
+  .form-grid.split-small {
+    grid-template-columns: 1fr;
+  }
+
+  .social-edit-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .social-edit-label {
+    border-right: 1px solid #7e8e9b;
+  }
+
+  .education-head {
+    flex-direction: column;
+  }
+
+  .education-footer {
+    justify-content: flex-start;
+  }
+
+  .field.short {
+    max-width: none;
+  }
+}

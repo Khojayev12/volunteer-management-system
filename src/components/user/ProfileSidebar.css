@@ -1,0 +1,151 @@
+.user-left-column {
+  display: grid;
+  gap: 10px;
+  align-content: start;
+}
+
+.profile-card,
+.user-side-menu {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xs);
+}
+
+.profile-header-block {
+  background: #c9dceb;
+  padding: 16px;
+  display: grid;
+  grid-template-columns: 112px 1fr auto;
+  gap: 14px;
+  align-items: center;
+}
+
+.profile-photo-placeholder {
+  width: 102px;
+  height: 102px;
+  border-radius: 50%;
+  border: 3px dashed #4c6e84;
+  background: #eff6fb;
+  display: grid;
+  place-items: center;
+  font-size: 0.8rem;
+  color: #38576b;
+}
+
+.profile-head-text h1 {
+  margin: 0;
+  font-size: 1.85rem;
+  line-height: 1.1;
+}
+
+.profile-head-text p {
+  margin: 6px 0 2px;
+  font-size: 1rem;
+  color: #2f3b44;
+}
+
+.profile-head-text span {
+  font-size: 0.84rem;
+  color: #51616d;
+}
+
+.profile-edit-button {
+  align-self: start;
+  border: none;
+  background: transparent;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  color: #2d3f4f;
+  text-decoration: none;
+}
+
+.social-links-block {
+  padding: 14px 16px 16px;
+}
+
+.social-links-block h2 {
+  margin: 0 0 12px;
+  font-size: 1.6rem;
+  font-weight: 600;
+}
+
+.social-links-block ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 10px;
+}
+
+.social-links-block li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.social-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 1px solid #7f95a6;
+  display: grid;
+  place-items: center;
+  font-size: 0.58rem;
+  color: #4f6779;
+  background: #f1f6fa;
+  flex-shrink: 0;
+}
+
+.social-links-block a {
+  color: #283640;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.social-links-block a:hover,
+.social-links-block a:focus-visible {
+  text-decoration: underline;
+}
+
+.user-side-menu {
+  overflow: hidden;
+}
+
+.side-menu-item {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e8e8e8;
+}
+
+.side-menu-item:last-child {
+  border-bottom: none;
+}
+
+.side-menu-item.active {
+  background: #c9dceb;
+}
+
+.side-menu-title {
+  margin: 0;
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.side-menu-subtitle {
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+  color: #465660;
+}
+
+@media (max-width: 1024px) {
+  .profile-header-block {
+    grid-template-columns: 102px 1fr;
+  }
+
+  .profile-edit-button {
+    grid-column: span 2;
+    justify-self: end;
+  }
+}

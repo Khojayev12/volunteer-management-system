@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import './ProjectsCarousel.css';
 
 function ProjectsCarousel({ projects }) {
   const carouselRef = useRef(null);
@@ -127,7 +128,7 @@ function ProjectsCarousel({ projects }) {
           <button
             key={`dot-${index}`}
             type="button"
-            className={`dot ${index === activeIndex ? 'dot-active' : ''}`}
+            className={`carousel-dot ${index === activeIndex ? 'carousel-dot-active' : ''}`}
             onClick={() => scrollToSlide(index)}
             aria-label={`Go to slide ${index + 1}`}
           />

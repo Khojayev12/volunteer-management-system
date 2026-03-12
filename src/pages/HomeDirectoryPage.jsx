@@ -135,11 +135,12 @@ function HomeDirectoryPage() {
         <section className="opportunities-panel" aria-label="Projects">
           <form className="project-search-bar" onSubmit={(event) => event.preventDefault()}>
             <input
+              className="form-control"
               type="search"
               placeholder="Search by project title, location, skill"
               aria-label="Search projects"
             />
-            <button type="submit" className="search-btn">
+            <button type="submit" className="btn btn-primary search-btn">
               Search
             </button>
           </form>

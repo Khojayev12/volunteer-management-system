@@ -49,9 +49,9 @@
 }
 
 .site-footer-inner {
-  max-width: 1320px;
+  max-width: var(--container-xl);
   margin: 0 auto;
-  padding: 70px 40px 54px;
+  padding: 64px 40px 48px;
   display: grid;
   grid-template-columns: 1.8fr 1fr 1fr;
   gap: 46px;
@@ -80,16 +80,16 @@
 
 .footer-brand h3 {
   margin: 0;
-  font-size: 2.7rem;
-  font-weight: 600;
+  font-size: 2rem;
+  font-weight: 700;
 }
 
 .footer-brand-col p {
-  margin: 26px 0 36px;
+  margin: 18px 0 28px;
   max-width: 700px;
   color: #d7ebf9;
-  line-height: 1.45;
-  font-size: 1.35rem;
+  line-height: 1.6;
+  font-size: 1rem;
 }
 
 .footer-socials {
@@ -98,8 +98,8 @@
 }
 
 .footer-social-icon {
-  width: 34px;
-  height: 34px;
+  width: 36px;
+  height: 36px;
   border: 2px solid #d6ecfb;
   border-radius: 50%;
   display: inline-flex;
@@ -119,9 +119,9 @@
 
 .footer-links-col h4,
 .footer-contact-col h4 {
-  margin: 8px 0 24px;
-  font-size: 2.2rem;
-  font-weight: 500;
+  margin: 8px 0 20px;
+  font-size: 1.35rem;
+  font-weight: 600;
 }
 
 .footer-links-grid {
@@ -137,7 +137,7 @@
 }
 
 .footer-links-grid a {
-  font-size: 1.2rem;
+  font-size: 0.95rem;
 }
 
 .footer-links-grid a:hover,
@@ -151,7 +151,7 @@
   align-items: center;
   gap: 12px;
   color: #deeffb;
-  font-size: 1.2rem;
+  font-size: 0.95rem;
 }
 
 .footer-contact-list span {
@@ -171,7 +171,7 @@
   justify-content: space-between;
   align-items: center;
   color: #d7ebf9;
-  font-size: 1rem;
+  font-size: 0.9rem;
 }
 
 .footer-bottom-bar p {
@@ -190,19 +190,19 @@
   }
 
   .footer-brand h3 {
-    font-size: 2rem;
+    font-size: 1.75rem;
   }
 
   .footer-brand-col p,
   .footer-links-grid a,
   .footer-contact-list p {
-    font-size: 1rem;
+    font-size: 0.92rem;
   }
 
   .footer-links-col h4,
   .footer-contact-col h4 {
     margin-bottom: 16px;
-    font-size: 1.6rem;
+    font-size: 1.2rem;
   }
 }
 

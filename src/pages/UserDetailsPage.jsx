@@ -1,5 +1,6 @@
 import { Link, useParams } from 'react-router-dom';
 import HomeTopBar from '../components/home/HomeTopBar';
+import ProfileSidebar from '../components/user/ProfileSidebar';
 import { getUserById } from '../constants/userPageData';
 import './UserDetailsPage.css';
 
@@ -26,74 +27,31 @@ function UserDetailsPage() {
       <HomeTopBar />
 
       <div className="user-profile-layout">
-        <aside className="user-left-column">
-          <section className="profile-card">
-            <div className="profile-header-block">
-              <div className="profile-photo-placeholder" aria-hidden="true">
-                photo
-              </div>
-
-              <div className="profile-head-text">
-                <h1>{user.displayName}</h1>
-                <p>{user.username}</p>
-                <span>Joined {user.joinedAt}</span>
-              </div>
-
-              <button type="button" className="profile-edit-button" aria-label="Edit profile">
-                edit
-              </button>
-            </div>
-
-            <div className="social-links-block">
-              <h2>Social Links</h2>
-              <ul>
-                {user.socialLinks.map((linkItem) => (
-                  <li key={linkItem.id}>
-                    <span className="social-icon" aria-hidden="true">
-                      icon
-                    </span>
-                    <a href={linkItem.value}>{linkItem.value}</a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </section>
-
-          <section className="user-side-menu">
-            <article className="side-menu-item active">
-              <p className="side-menu-title">Profile</p>
-              <p className="side-menu-subtitle">Email, location, skills, contributions, badges, and details.</p>
-            </article>
-            <article className="side-menu-item">
-              <p className="side-menu-title">Settings</p>
-              <p className="side-menu-subtitle">Location preference, time preference, and account settings.</p>
-            </article>
-          </section>
-        </aside>
+        <ProfileSidebar user={user} activeSection="profile" />
 
         <section className="user-right-column">
           <article className="info-card">
             <h2>Personal Info</h2>
             <div className="personal-info-grid">
               <div>
-                <p className="label">Name</p>
-                <p className="value">{user.fullName}</p>
+                <p className="user-detail-label">Name</p>
+                <p className="user-detail-value">{user.fullName}</p>
               </div>
               <div>
-                <p className="label">Age</p>
-                <p className="value">{user.age}</p>
+                <p className="user-detail-label">Age</p>
+                <p className="user-detail-value">{user.age}</p>
               </div>
               <div>
-                <p className="label">Gender</p>
-                <p className="value">{user.gender}</p>
+                <p className="user-detail-label">Gender</p>
+                <p className="user-detail-value">{user.gender}</p>
               </div>
               <div>
-                <p className="label">Email</p>
-                <p className="value">{user.email}</p>
+                <p className="user-detail-label">Email</p>
+                <p className="user-detail-value">{user.email}</p>
               </div>
               <div>
-                <p className="label">Location</p>
-                <p className="value">{user.location}</p>
+                <p className="user-detail-label">Location</p>
+                <p className="user-detail-value">{user.location}</p>
               </div>
             </div>
           </article>
@@ -105,9 +63,9 @@ function UserDetailsPage() {
 
           <article className="info-card skills-card">
             <h2>Skills</h2>
-            <div className="skills-list">
+            <div className="user-skills-list">
               {user.skills.map((skill) => (
-                <div key={skill.id} className="skill-item">
+                <div key={skill.id} className="user-skill-item">
                   <h3>{skill.title}</h3>
                   <p>{skill.description}</p>
                 </div>

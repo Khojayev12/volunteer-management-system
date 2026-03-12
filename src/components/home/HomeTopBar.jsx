@@ -1,3 +1,5 @@
+import './HomeTopBar.css';
+
 function HomeTopBar() {
   return (
     <header className="home-top-bar">
@@ -10,7 +12,12 @@ function HomeTopBar() {
 
       <div className="home-top-actions">
         <label className="home-top-search" htmlFor="global-search">
-          <input id="global-search" type="search" placeholder="Search" />
+          <input
+            id="global-search"
+            className="form-control home-top-search-input"
+            type="search"
+            placeholder="Search"
+          />
         </label>
         <button type="button" className="icon-button" aria-label="Notifications">
           notif

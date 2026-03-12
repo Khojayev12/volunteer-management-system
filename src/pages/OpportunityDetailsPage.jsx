@@ -29,7 +29,7 @@ function OpportunityDetailsPage() {
         <aside className="opportunity-summary-card">
           <h1>{opportunity.title}</h1>
           <p>{opportunity.organization}</p>
-          <button type="button" className="apply-button">
+          <button type="button" className="btn btn-primary btn-full apply-button">
             Apply
           </button>
         </aside>
@@ -111,7 +111,7 @@ function OpportunityDetailsPage() {
               <span className="details-pill">{opportunity.skillsRequiredCount}</span>
               <span className="details-pill">Volunteers needed</span>
             </div>
-            <ul className="skills-list">
+            <ul className="opportunity-skills-list">
               {opportunity.skills.map((skill) => (
                 <li key={skill.id}>
                   <span className="skill-id">{skill.id}</span>

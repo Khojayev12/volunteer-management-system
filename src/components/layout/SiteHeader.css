@@ -2,14 +2,16 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 16px;
   margin-bottom: 64px;
 }
 
 .site-brand {
   font-weight: 800;
-  font-size: 1.1rem;
-  color: #1176bb;
+  font-size: 1.25rem;
+  color: var(--color-brand);
   text-decoration: none;
+  letter-spacing: 0.02em;
 }
 
 .site-nav-links {
@@ -22,12 +24,12 @@
   color: #1d2a33;
   text-decoration: none;
   font-weight: 500;
-  transition: color 180ms ease, transform 180ms ease;
+  transition: color var(--transition-standard), transform var(--transition-standard);
 }
 
 .site-nav-links a:hover,
 .site-nav-links a:focus-visible {
-  color: #0d86c8;
+  color: var(--color-brand);
   transform: translateY(-1px);
 }
 

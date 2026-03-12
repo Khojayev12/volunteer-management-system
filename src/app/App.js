@@ -9,6 +9,7 @@ import SiteFooter from '../components/layout/SiteFooter';
 import HomeDirectoryPage from '../pages/HomeDirectoryPage';
 import OpportunityDetailsPage from '../pages/OpportunityDetailsPage';
 import UserDetailsPage from '../pages/UserDetailsPage';
+import EditProfilePage from '../pages/EditProfilePage';
 
 function ScrollToTopOnRouteChange() {
   const { pathname } = useLocation();
@@ -26,10 +27,8 @@ function ScrollToTopOnRouteChange() {
 
 function AppContent() {
   const location = useLocation();
-  const shouldHideFooter =
-    ['/signup', '/login', '/home'].includes(location.pathname) ||
-    location.pathname.startsWith('/oppotunity/') ||
-    location.pathname.startsWith('/user/');
+  const normalizedPath = location.pathname.replace(/\/+$/, '') || '/';
+  const shouldHideFooter = ['/signup', '/login'].includes(normalizedPath);
   const shouldShowFooter = !shouldHideFooter;
 
   return (
@@ -40,6 +39,7 @@ function AppContent() {
         <Route path="/home" element={<HomeDirectoryPage />} />
         <Route path="/oppotunity/:opportunityId/" element={<OpportunityDetailsPage />} />
         <Route path="/user/:userId/" element={<UserDetailsPage />} />
+        <Route path="/editprofile" element={<EditProfilePage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/contactus" element={<ContactUsPage />} />

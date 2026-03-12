@@ -3,40 +3,40 @@ import './LoginPage.css';
 
 function LoginPage() {
   return (
-    <main className="login-page">
-      <section className="login-left-panel">
-        <div className="login-brand">VolunteerLink</div>
-        <blockquote className="login-quote">
+    <main className="login-page auth-page">
+      <section className="login-left-panel auth-left-panel">
+        <div className="login-brand auth-brand">VolunteerLink</div>
+        <blockquote className="login-quote auth-quote">
           “Volunteering is at the very core of being a human. No one has made it through
           life without someone else&apos;s help.”
         </blockquote>
-        <p className="login-quote-author">- Heather French Henry</p>
+        <p className="login-quote-author auth-quote-author">- Heather French Henry</p>
       </section>
 
-      <section className="login-right-panel">
-        <form className="login-form-card">
+      <section className="login-right-panel auth-right-panel">
+        <form className="login-form-card auth-form-card">
           <h1>Welcome Back.</h1>
           <p>Enter your credentials to login.</p>
 
           <label>
             Email
-            <input type="email" defaultValue="harry@potter.com" />
+            <input className="form-control" type="email" defaultValue="harry@potter.com" />
           </label>
 
           <label>
             Password
-            <input type="password" defaultValue="**************" />
+            <input className="form-control" type="password" defaultValue="**************" />
           </label>
 
           <div className="login-forgot-row">
             <a href="#forgot-password">Forgot password?</a>
           </div>
 
-          <button type="submit" className="btn btn-primary login-submit-btn">
+          <button type="submit" className="btn btn-primary login-submit-btn auth-submit-btn">
             Login
           </button>
 
-          <p className="login-signup-line">
+          <p className="login-signup-line auth-alt-line">
             Don&apos;t have an account? <Link to="/signup">Create one.</Link>
           </p>
         </form>

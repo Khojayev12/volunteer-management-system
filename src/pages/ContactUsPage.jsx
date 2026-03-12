@@ -24,20 +24,20 @@ function ContactUsPage() {
               <div className="contact-form-grid">
                 <label>
                   Name
-                  <input type="text" defaultValue="harry potter" />
+                  <input className="form-control" type="text" defaultValue="harry potter" />
                 </label>
                 <label>
                   Email
-                  <input type="email" defaultValue="harry@potter.com" />
+                  <input className="form-control" type="email" defaultValue="harry@potter.com" />
                 </label>
               </div>
 
               <label className="contact-message-label">
                 Message
-                <textarea defaultValue="Go ahead, we are listening" />
+                <textarea className="form-control" defaultValue="Go ahead, we are listening" />
               </label>
 
-              <button type="submit" className="btn btn-primary contact-submit-btn">
+              <button type="submit" className="btn btn-primary btn-full contact-submit-btn">
                 Button
               </button>
             </form>

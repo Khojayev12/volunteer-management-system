@@ -3,18 +3,18 @@ import './SignUpPage.css';
 
 function SignUpPage() {
   return (
-    <main className="signup-page">
-      <section className="signup-left-panel">
-        <div className="signup-brand">VolunteerLink</div>
-        <blockquote className="signup-quote">
+    <main className="signup-page auth-page">
+      <section className="signup-left-panel auth-left-panel">
+        <div className="signup-brand auth-brand">VolunteerLink</div>
+        <blockquote className="signup-quote auth-quote">
           “Volunteering is at the very core of being a human. No one has made it through
           life without someone else&apos;s help.”
         </blockquote>
-        <p className="signup-quote-author">- Heather French Henry</p>
+        <p className="signup-quote-author auth-quote-author">- Heather French Henry</p>
       </section>
 
-      <section className="signup-right-panel">
-        <form className="signup-form-card">
+      <section className="signup-right-panel auth-right-panel">
+        <form className="signup-form-card auth-form-card">
           <h1>Create an account</h1>
           <p>
             By creating an account you agree to our terms of service and privacy policy
@@ -23,39 +23,39 @@ function SignUpPage() {
           <div className="signup-two-col">
             <label>
               First Name
-              <input type="text" defaultValue="harry" />
+              <input className="form-control" type="text" defaultValue="harry" />
             </label>
             <label>
               Last Name
-              <input type="text" defaultValue="potter" />
+              <input className="form-control" type="text" defaultValue="potter" />
             </label>
           </div>
 
           <label>
             Email
-            <input type="email" defaultValue="harry@potter.com" />
+            <input className="form-control" type="email" defaultValue="harry@potter.com" />
           </label>
 
           <label>
             Username
-            <input type="text" defaultValue="harry_potter" />
+            <input className="form-control" type="text" defaultValue="harry_potter" />
           </label>
 
           <label>
             Password
-            <input type="password" defaultValue="**************" />
+            <input className="form-control" type="password" defaultValue="**************" />
           </label>
 
           <label>
             Repeat password
-            <input type="password" defaultValue="**************" />
+            <input className="form-control" type="password" defaultValue="**************" />
           </label>
 
-          <button type="submit" className="btn btn-primary signup-submit-btn">
+          <button type="submit" className="btn btn-primary signup-submit-btn auth-submit-btn">
             Sign up
           </button>
 
-          <p className="signup-login-line">
+          <p className="signup-login-line auth-alt-line">
             Already have an account? <Link to="/login">Login.</Link>
           </p>
         </form>
