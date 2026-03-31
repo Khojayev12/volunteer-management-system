@@ -207,9 +207,14 @@ textarea.form-control {
 }
 
 .auth-brand {
-  font-size: 2.25rem;
-  font-weight: 700;
-  color: var(--color-text-strong);
+  display: inline-flex;
+  align-items: center;
+}
+
+.auth-brand-image {
+  display: block;
+  width: auto;
+  height: 40px;
 }
 
 .auth-quote {

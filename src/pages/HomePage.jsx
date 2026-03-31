@@ -2,6 +2,8 @@ import ProjectsCarousel from '../components/common/ProjectsCarousel';
 import SiteHeader from '../components/layout/SiteHeader';
 import { projects, stats } from '../constants/homePageData';
 import { Link } from 'react-router-dom';
+import homeHeroIllustration from '../assets/images/home-hero-illustration.png';
+import homeMissionIllustration from '../assets/images/home-mission-illustration.png';
 import './HomePage.css';
 
 function HomePage() {
@@ -30,12 +32,12 @@ function HomePage() {
               </div>
             </div>
 
-            <div
-              className="hero-image-placeholder"
-              role="img"
-              aria-label="Hero illustration placeholder"
-            >
-              <span>Place image: home-hero-illustration.png</span>
+            <div className="hero-image-placeholder">
+              <img
+                src={homeHeroIllustration}
+                alt="People volunteering together"
+                className="hero-image"
+              />
             </div>
           </div>
         </div>
@@ -66,12 +68,12 @@ function HomePage() {
               organizations build support from their communities.
             </p>
           </div>
-          <div
-            className="mission-image-placeholder"
-            role="img"
-            aria-label="Mission illustration placeholder"
-          >
-            <span>Place image: home-mission-illustration.png</span>
+          <div className="mission-image-placeholder">
+            <img
+              src={homeMissionIllustration}
+              alt="Volunteers supporting community projects"
+              className="mission-image"
+            />
           </div>
         </div>
       </section>

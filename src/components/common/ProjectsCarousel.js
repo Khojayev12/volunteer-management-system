@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import projectCarouselLogo from '../../assets/images/project-carousel-logo.png';
 import './ProjectsCarousel.css';
 
 function ProjectsCarousel({ projects }) {
@@ -91,12 +92,12 @@ function ProjectsCarousel({ projects }) {
             {projects.map((project) => (
               <article key={project.id} className="project-card">
                 <div className="project-head">
-                  <div
-                    className="project-logo-placeholder"
-                    role="img"
-                    aria-label="Project logo placeholder"
-                  >
-                    <span>Logo</span>
+                  <div className="project-logo-placeholder">
+                    <img
+                      src={projectCarouselLogo}
+                      alt={`${project.title} logo`}
+                      className="project-logo-image"
+                    />
                   </div>
                   <div>
                     <h3>{project.title}</h3>

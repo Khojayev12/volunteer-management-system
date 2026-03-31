@@ -10,23 +10,14 @@
 }
 
 .home-top-brand {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 10px;
-  font-weight: 700;
-  font-size: clamp(1.6rem, 2vw, 2rem);
-  color: #1e2e39;
 }
 
-.brand-mark {
-  width: 30px;
-  height: 30px;
-  border-radius: 50%;
-  border: 2px dashed #4f6679;
-  display: grid;
-  place-items: center;
-  font-size: 0.62rem;
-  background: #eef5fa;
+.home-top-brand-logo {
+  display: block;
+  width: auto;
+  height: 36px;
 }
 
 .home-top-actions {

@@ -18,15 +18,14 @@
 
 .not-found-illustration-placeholder {
   margin: 0 auto 40px;
-  width: 320px;
-  min-height: 170px;
-  border: 2px dashed #83a6be;
-  border-radius: 14px;
-  display: grid;
-  place-items: center;
-  font-weight: 700;
-  color: #3f6378;
-  background: rgba(255, 255, 255, 0.26);
+  width: 100%;
+  max-width: 420px;
+}
+
+.not-found-illustration-image {
+  display: block;
+  width: 100%;
+  height: auto;
 }
 
 .not-found-content h1 {
@@ -72,6 +71,6 @@
 
   .not-found-illustration-placeholder {
     width: 100%;
-    max-width: 280px;
+    max-width: 320px;
   }
 }

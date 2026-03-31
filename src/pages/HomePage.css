@@ -46,27 +46,20 @@
 .hero-image-placeholder {
   width: 100%;
   min-height: 420px;
-  border: 2px dashed #5f7a8f;
-  border-radius: 16px;
-  background: linear-gradient(145deg, #eaf4fa, #c9e0ee);
+  border: none;
+  border-radius: 0;
+  background: transparent;
   display: grid;
   place-items: center;
-  text-align: center;
-  padding: 18px;
-  transition: transform 220ms ease, box-shadow 220ms ease,
-    border-color 220ms ease;
+  padding: 0;
+  overflow: hidden;
 }
 
-.hero-image-placeholder:hover {
-  transform: translateY(-4px);
-  border-color: var(--color-brand);
-  box-shadow: 0 12px 24px rgba(26, 68, 94, 0.16);
-}
-
-.hero-image-placeholder span {
-  font-size: 0.95rem;
-  font-weight: 700;
-  color: #36566d;
+.hero-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
 }
 
 .stats-row {
@@ -149,26 +142,20 @@
 .mission-image-placeholder {
   width: 100%;
   min-height: 360px;
-  border: 2px dashed #afc4d2;
-  border-radius: 14px;
-  background: linear-gradient(145deg, #f8fbfd, #eaf3f8);
+  border: none;
+  border-radius: 0;
+  background: transparent;
   display: grid;
   place-items: center;
-  text-align: center;
-  padding: 18px;
-  transition: transform 220ms ease, box-shadow 220ms ease,
-    border-color 220ms ease;
+  padding: 0;
+  overflow: hidden;
 }
 
-.mission-image-placeholder:hover {
-  transform: translateY(-4px);
-  border-color: #53a8d5;
-  box-shadow: 0 12px 22px rgba(29, 54, 71, 0.14);
-}
-
-.mission-image-placeholder span {
-  color: #4d6f84;
-  font-weight: 700;
+.mission-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 0;
 }
 
 .latest-projects-section {
@@ -365,9 +352,7 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .hero-image-placeholder,
   .stat-card,
-  .mission-image-placeholder,
   .benefits-video-placeholder {
     transition: none;
   }

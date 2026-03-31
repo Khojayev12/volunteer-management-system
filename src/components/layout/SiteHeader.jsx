@@ -1,11 +1,12 @@
 import { Link } from 'react-router-dom';
+import headerLogo from '../../assets/images/header-logo.png';
 import './SiteHeader.css';
 
 function SiteHeader() {
   return (
     <header className="site-header">
       <Link to="/" className="site-brand" aria-label="Volunteer Management System home">
-        VMS
+        <img src={headerLogo} alt="VMS" className="site-brand-logo" />
       </Link>
       <nav className="site-nav-links" aria-label="Main navigation">
         <a href="/#about">About us</a>

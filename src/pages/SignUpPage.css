@@ -12,6 +12,26 @@
   margin-top: 20px;
 }
 
+.signup-feedback {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.signup-feedback-error {
+  background: #fdeceb;
+  border: 1px solid #efb8b5;
+  color: #8f1f18;
+}
+
+.signup-feedback-success {
+  background: #ecf8ef;
+  border: 1px solid #b8e0bf;
+  color: #1f6a2d;
+}
+
 @media (max-width: 700px) {
   .signup-two-col {
     grid-template-columns: 1fr;

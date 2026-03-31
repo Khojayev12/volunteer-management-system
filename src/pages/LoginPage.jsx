@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom';
+import headerLogo from '../assets/images/header-logo.png';
 import './LoginPage.css';
 
 function LoginPage() {
   return (
     <main className="login-page auth-page">
       <section className="login-left-panel auth-left-panel">
-        <div className="login-brand auth-brand">VolunteerLink</div>
+        <div className="login-brand auth-brand">
+          <img src={headerLogo} alt="VMS" className="auth-brand-image" />
+        </div>
         <blockquote className="login-quote auth-quote">
           “Volunteering is at the very core of being a human. No one has made it through
           life without someone else&apos;s help.”

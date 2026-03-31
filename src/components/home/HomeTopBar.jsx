@@ -1,13 +1,11 @@
+import headerLogo from '../../assets/images/header-logo.png';
 import './HomeTopBar.css';
 
 function HomeTopBar() {
   return (
     <header className="home-top-bar">
       <div className="home-top-brand">
-        <span className="brand-mark" aria-hidden="true">
-          logo
-        </span>
-        VolunteerLink
+        <img src={headerLogo} alt="VMS" className="home-top-brand-logo" />
       </div>
 
       <div className="home-top-actions">

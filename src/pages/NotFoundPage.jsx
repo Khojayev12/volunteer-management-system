@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom';
 import SiteHeader from '../components/layout/SiteHeader';
+import notFoundLogo from '../assets/images/404-logo.png';
 import './NotFoundPage.css';
 
 function NotFoundPage() {
@@ -13,12 +14,8 @@ function NotFoundPage() {
         <SiteHeader />
 
         <section className="not-found-content">
-          <div
-            className="not-found-illustration-placeholder"
-            role="img"
-            aria-label="404 illustration placeholder"
-          >
-            Place image: 404-illustration.png
+          <div className="not-found-illustration-placeholder">
+            <img src={notFoundLogo} alt="404 not found illustration" className="not-found-illustration-image" />
           </div>
           <h1>404 - Page Not Found</h1>
           <p>Oops! The page you are looking for could not be found.</p>
