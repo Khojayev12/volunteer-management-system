@@ -21,3 +21,17 @@
 .login-signup-line {
   margin-top: 20px;
 }
+
+.login-feedback {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.login-feedback-error {
+  background: #fdeceb;
+  border: 1px solid #efb8b5;
+  color: #8f1f18;
+}
