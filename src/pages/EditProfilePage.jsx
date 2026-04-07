@@ -1,8 +1,20 @@
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import HomeTopBar from '../components/home/HomeTopBar';
 import ProfileSidebar from '../components/user/ProfileSidebar';
 import { getUserById } from '../constants/userPageData';
+import { getUserProfile, updateUserProfile } from '../services/api/userApi';
+import {
+  assignSkillToUser,
+  createSkill,
+  getUserSkills,
+  removeSkillFromUser,
+} from '../services/api/skillsApi';
+import {
+  createSocialMediaLink,
+  getUserSocialMediaLinks,
+} from '../services/api/socialMediaLinksApi';
+import { getSessionUserId } from '../services/session/sessionManager';
 import './UserDetailsPage.css';
 import './EditProfilePage.css';
 
@@ -46,6 +58,306 @@ const EMPTY_EDUCATION_FORM = {
 
 const createEmptyEducationForm = () => ({ ...EMPTY_EDUCATION_FORM });
 
+const EMPTY_PROFILE_FORM = {
+  firstName: '',
+  lastName: '',
+  bio: '',
+  gender: '',
+  birthdate: '',
+  email: '',
+  location: '',
+  status: 'active',
+};
+
+const createEmptyProfileForm = () => ({ ...EMPTY_PROFILE_FORM });
+
+const getOptionalValue = (value) => {
+  if (value === null || value === undefined) {
+    return '';
+  }
+
+  return String(value).trim();
+};
+
+const getUrlWithProtocol = (value) => {
+  const normalizedValue = getOptionalValue(value);
+  if (!normalizedValue) {
+    return '';
+  }
+
+  if (/^https?:\/\//i.test(normalizedValue)) {
+    return normalizedValue;
+  }
+
+  return `https://${normalizedValue}`;
+};
+
+const getNormalizedPlatformName = (platformName) =>
+  getOptionalValue(platformName).toLowerCase();
+
+const getSocialLabelFromIcon = (iconValue) => {
+  const normalizedIcon = getNormalizedPlatformName(iconValue);
+  if (!normalizedIcon) {
+    return 'Social';
+  }
+
+  const matchedPlatform = SOCIAL_PLATFORMS.find(
+    (platform) => getNormalizedPlatformName(platform) === normalizedIcon
+  );
+
+  return matchedPlatform || normalizedIcon;
+};
+
+const getFormattedJoinDate = (dateValue) => {
+  if (!dateValue) {
+    return 'Unknown date';
+  }
+
+  const parsedDate = new Date(dateValue);
+  if (Number.isNaN(parsedDate.getTime())) {
+    return 'Unknown date';
+  }
+
+  return parsedDate.toLocaleDateString('en-US', {
+    month: 'long',
+    year: 'numeric',
+  });
+};
+
+const getDateInputValue = (dateValue) => {
+  if (!dateValue) {
+    return '';
+  }
+
+  const parsedDate = new Date(dateValue);
+  if (Number.isNaN(parsedDate.getTime())) {
+    return '';
+  }
+
+  return parsedDate.toISOString().slice(0, 10);
+};
+
+const getNameParts = (fullName) => {
+  const normalized = getOptionalValue(fullName);
+  if (!normalized) {
+    return { firstName: '', lastName: '' };
+  }
+
+  const [firstName, ...rest] = normalized.split(/\s+/);
+  return {
+    firstName: firstName || '',
+    lastName: rest.join(' '),
+  };
+};
+
+const getSocialLinksFromApiUser = (apiUser) => {
+  const configuredLinks = SOCIAL_PLATFORMS.map((platform) => {
+    const key = platform.toLowerCase();
+    const value =
+      getOptionalValue(apiUser?.[`${key}_url`]) ||
+      getOptionalValue(apiUser?.[`${key}_link`]) ||
+      getOptionalValue(apiUser?.[key]) ||
+      getOptionalValue(apiUser?.social_links?.[key]);
+
+    if (!value) {
+      return null;
+    }
+
+    return {
+      id: key,
+      label: platform,
+      value,
+    };
+  }).filter(Boolean);
+
+  if (configuredLinks.length) {
+    return configuredLinks;
+  }
+
+  if (Array.isArray(apiUser?.social_links)) {
+    return apiUser.social_links
+      .map((item, index) => {
+        const label = getOptionalValue(item?.label);
+        const value = getOptionalValue(item?.value);
+
+        if (!value) {
+          return null;
+        }
+
+        return {
+          id: getOptionalValue(item?.id) || `social-${index}`,
+          label: label || 'Social',
+          value,
+        };
+      })
+      .filter(Boolean);
+  }
+
+  return [];
+};
+
+const mapApiUserToSidebarModel = (apiUser) => {
+  const firstName = getOptionalValue(apiUser?.first_name);
+  const lastName = getOptionalValue(apiUser?.last_name);
+  const email = getOptionalValue(apiUser?.email);
+  const fullName = [firstName, lastName].filter(Boolean).join(' ').trim();
+  const displayName = fullName || email || 'User';
+  const usernameSeed = email.split('@')[0];
+
+  return {
+    id: getOptionalValue(apiUser?.id),
+    displayName,
+    username: usernameSeed ? `@${usernameSeed}` : '@user',
+    joinedAt: getFormattedJoinDate(apiUser?.created_at),
+    fullName: displayName,
+    age: '',
+    gender: getOptionalValue(apiUser?.gender),
+    email,
+    location: getOptionalValue(apiUser?.location),
+    bio: getOptionalValue(apiUser?.bio),
+    socialLinks: getSocialLinksFromApiUser(apiUser),
+    skills: getSkillsFromApiUser(apiUser),
+    contributions: [],
+  };
+};
+
+const mapApiUserToProfileForm = (apiUser) => ({
+  firstName: getOptionalValue(apiUser?.first_name),
+  lastName: getOptionalValue(apiUser?.last_name),
+  bio: getOptionalValue(apiUser?.bio),
+  gender: getOptionalValue(apiUser?.gender).toLowerCase(),
+  birthdate: getDateInputValue(apiUser?.birthday_at),
+  email: getOptionalValue(apiUser?.email),
+  location: getOptionalValue(apiUser?.location),
+  status: getOptionalValue(apiUser?.status).toLowerCase() || 'active',
+});
+
+const mapLocalUserToProfileForm = (localUser) => {
+  const { firstName, lastName } = getNameParts(localUser?.fullName || localUser?.displayName);
+
+  return {
+    firstName,
+    lastName,
+    bio: getOptionalValue(localUser?.bio),
+    gender: getOptionalValue(localUser?.gender).toLowerCase(),
+    birthdate: '',
+    email: getOptionalValue(localUser?.email),
+    location: getOptionalValue(localUser?.location),
+    status: 'active',
+  };
+};
+
+const getSkillsFromApiUser = (apiUser) => {
+  const rawSkills = Array.isArray(apiUser?.skills)
+    ? apiUser.skills
+    : Array.isArray(apiUser?.user_skills)
+      ? apiUser.user_skills
+      : [];
+
+  return rawSkills
+    .map((item, index) => {
+      const nestedSkill =
+        item?.skill && typeof item.skill === 'object' ? item.skill : null;
+      const title =
+        getOptionalValue(item?.title) ||
+        getOptionalValue(item?.name) ||
+        getOptionalValue(nestedSkill?.title) ||
+        getOptionalValue(nestedSkill?.name);
+      const description =
+        getOptionalValue(item?.description) ||
+        getOptionalValue(nestedSkill?.description);
+      const backendSkillId =
+        getOptionalValue(item?.skill_id) ||
+        getOptionalValue(item?.id) ||
+        getOptionalValue(nestedSkill?.id);
+
+      if (!title && !description) {
+        return null;
+      }
+
+      return {
+        id: backendSkillId ? `skill-${backendSkillId}` : `skill-${index}`,
+        backendSkillId: backendSkillId || null,
+        title,
+        description,
+      };
+    })
+    .filter(Boolean);
+};
+
+const extractCreatedSkillId = (createSkillResponse) => {
+  const candidateIds = [
+    createSkillResponse?.data?.id,
+    createSkillResponse?.data?.skill_id,
+    createSkillResponse?.data?.skill?.id,
+    createSkillResponse?.id,
+    createSkillResponse?.skill_id,
+    createSkillResponse?.skill?.id,
+  ];
+
+  const matchingValue = candidateIds.find(
+    (value) => value !== undefined && value !== null && String(value).trim() !== ''
+  );
+
+  return matchingValue !== undefined && matchingValue !== null
+    ? String(matchingValue)
+    : '';
+};
+
+const mapSkillsApiResponse = (skillsResponse) => {
+  const rawSkills = Array.isArray(skillsResponse)
+    ? skillsResponse
+    : Array.isArray(skillsResponse?.data)
+      ? skillsResponse.data
+      : [];
+
+  return rawSkills
+    .map((item, index) => {
+      const title = getOptionalValue(item?.name) || getOptionalValue(item?.title);
+      const description = getOptionalValue(item?.description);
+      const backendSkillId = getOptionalValue(item?.id) || getOptionalValue(item?.skill_id);
+
+      if (!title && !description) {
+        return null;
+      }
+
+      return {
+        id: backendSkillId ? `skill-${backendSkillId}` : `skill-${index}`,
+        backendSkillId: backendSkillId || null,
+        title: title || '',
+        description: description || '',
+      };
+    })
+    .filter(Boolean);
+};
+
+const mapSocialMediaLinksApiResponse = (linksResponse) => {
+  const rawLinks = Array.isArray(linksResponse)
+    ? linksResponse
+    : Array.isArray(linksResponse?.data)
+      ? linksResponse.data
+      : [];
+
+  return rawLinks
+    .map((item, index) => {
+      const value = getOptionalValue(item?.link);
+      if (!value) {
+        return null;
+      }
+
+      const iconValue = getOptionalValue(item?.icon);
+
+      return {
+        id: getOptionalValue(item?.id) || `social-${index}`,
+        label: getSocialLabelFromIcon(iconValue),
+        icon: iconValue || '',
+        value,
+        href: getUrlWithProtocol(value),
+      };
+    })
+    .filter(Boolean);
+};
+
 const getInitialSocialLinks = (socialLinks) => {
   const initialValues = {};
 
@@ -68,9 +380,12 @@ const getInitialSocialLinks = (socialLinks) => {
 
 const getInitialSkills = (skills) =>
   skills.map((skill) => ({
-    id: skill.id,
-    title: skill.title,
-    description: skill.description,
+    id:
+      getOptionalValue(skill.id) ||
+      `skill-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+    backendSkillId: getOptionalValue(skill.backendSkillId) || null,
+    title: getOptionalValue(skill.title),
+    description: getOptionalValue(skill.description),
   }));
 
 const formatEducationDate = (dateValue) => {
@@ -111,7 +426,7 @@ function SocialLinkInput({ platform, value, onChange, onClear }) {
   );
 }
 
-function SkillEditInputRow({ skill, onChange, onRemove }) {
+function SkillEditInputRow({ skill, onChange, onRemove, isRemoving = false }) {
   return (
     <div className="skill-edit-row">
       <div className="skill-edit-fields">
@@ -140,6 +455,7 @@ function SkillEditInputRow({ skill, onChange, onRemove }) {
         className="remove-item-btn skill-remove-btn"
         onClick={() => onRemove(skill.id)}
         aria-label={`Remove ${skill.title || 'skill'}`}
+        disabled={isRemoving}
       >
         &times;
       </button>
@@ -227,16 +543,146 @@ function EducationModal({ mode, values, onChange, onSave, onClose }) {
 }
 
 function EditProfilePage() {
-  const user = getUserById('john-doe');
-  const [socialLinks, setSocialLinks] = useState(() =>
-    getInitialSocialLinks(user?.socialLinks || [])
-  );
-  const [skills, setSkills] = useState(() => getInitialSkills(user?.skills || []));
+  const { userId: routeUserId } = useParams();
+  const [user, setUser] = useState(null);
+  const [resolvedUserId, setResolvedUserId] = useState('');
+  const [canUpdateProfile, setCanUpdateProfile] = useState(false);
+  const [isLoadingProfile, setIsLoadingProfile] = useState(true);
+  const [loadError, setLoadError] = useState('');
+  const [isSavingProfile, setIsSavingProfile] = useState(false);
+  const [saveError, setSaveError] = useState('');
+  const [saveSuccess, setSaveSuccess] = useState('');
+  const [removingSkillIds, setRemovingSkillIds] = useState([]);
+  const [existingSocialMediaLinks, setExistingSocialMediaLinks] = useState([]);
+  const [profileForm, setProfileForm] = useState(createEmptyProfileForm);
+  const [socialLinks, setSocialLinks] = useState(() => getInitialSocialLinks([]));
+  const [skills, setSkills] = useState(() => []);
   const [educationList, setEducationList] = useState(INITIAL_EDUCATION);
   const [isEducationModalOpen, setIsEducationModalOpen] = useState(false);
   const [educationModalMode, setEducationModalMode] = useState('add');
   const [editingEducationId, setEditingEducationId] = useState(null);
   const [educationForm, setEducationForm] = useState(createEmptyEducationForm);
+
+  useEffect(() => {
+    let isActive = true;
+
+    const hydrateFromLocalUser = (localUser, errorMessage = '') => {
+      if (!isActive || !localUser) {
+        return;
+      }
+
+      setUser(localUser);
+      setResolvedUserId('');
+      setCanUpdateProfile(false);
+      setProfileForm(mapLocalUserToProfileForm(localUser));
+      const localSocialLinks = (localUser.socialLinks || []).map((item, index) => ({
+        id: getOptionalValue(item?.id) || `local-social-${index}`,
+        label: getOptionalValue(item?.label) || 'Social',
+        icon: getOptionalValue(item?.label),
+        value: getOptionalValue(item?.value),
+        href: getUrlWithProtocol(item?.value),
+      }));
+      setExistingSocialMediaLinks(localSocialLinks);
+      setSocialLinks(getInitialSocialLinks(localSocialLinks));
+      setSkills(getInitialSkills(localUser.skills || []));
+      if (errorMessage) {
+        setLoadError(errorMessage);
+      }
+    };
+
+    const initializeProfile = async () => {
+      setIsLoadingProfile(true);
+      setLoadError('');
+      setSaveError('');
+      setSaveSuccess('');
+
+      const storedUserId = getOptionalValue(getSessionUserId());
+      const requestedUserId = getOptionalValue(routeUserId || storedUserId);
+
+      if (!requestedUserId) {
+        hydrateFromLocalUser(getUserById('john-doe'));
+        if (isActive) {
+          setIsLoadingProfile(false);
+        }
+        return;
+      }
+
+      try {
+        const [profileResponse, skillsResponse, socialLinksResponse] = await Promise.all([
+          getUserProfile(requestedUserId),
+          getUserSkills(requestedUserId).catch(() => null),
+          getUserSocialMediaLinks(requestedUserId).catch(() => null),
+        ]);
+        const apiUser = profileResponse?.data;
+
+        if (!apiUser) {
+          throw new Error('Profile data is missing in response.');
+        }
+
+        const mappedUser = mapApiUserToSidebarModel(apiUser);
+        const fetchedSkills = skillsResponse ? mapSkillsApiResponse(skillsResponse) : [];
+        const fetchedSocialLinks = socialLinksResponse
+          ? mapSocialMediaLinksApiResponse(socialLinksResponse)
+          : [];
+        const editableSkills = fetchedSkills.length
+          ? fetchedSkills
+          : getSkillsFromApiUser(apiUser);
+        const editableSocialLinks = fetchedSocialLinks.length
+          ? fetchedSocialLinks
+          : mappedUser.socialLinks;
+
+        if (isActive) {
+          setUser({
+            ...mappedUser,
+            socialLinks: editableSocialLinks,
+            skills: editableSkills,
+          });
+          setResolvedUserId(mappedUser.id || requestedUserId);
+          setCanUpdateProfile(true);
+          setProfileForm(mapApiUserToProfileForm(apiUser));
+          setExistingSocialMediaLinks(editableSocialLinks);
+          setSocialLinks(getInitialSocialLinks(editableSocialLinks));
+          setSkills(getInitialSkills(editableSkills));
+        }
+      } catch (error) {
+        const apiMessage =
+          error?.response?.data?.message ||
+          error?.response?.data?.detail ||
+          error?.message;
+
+        const fallbackUser = getUserById(requestedUserId) || getUserById('john-doe');
+
+        if (fallbackUser) {
+          hydrateFromLocalUser(
+            fallbackUser,
+            apiMessage || 'Unable to load profile from API. Showing local data.'
+          );
+        } else if (isActive) {
+          setUser(null);
+          setResolvedUserId('');
+          setCanUpdateProfile(false);
+          setLoadError(apiMessage || 'Unable to load user profile.');
+        }
+      } finally {
+        if (isActive) {
+          setIsLoadingProfile(false);
+        }
+      }
+    };
+
+    initializeProfile();
+
+    return () => {
+      isActive = false;
+    };
+  }, [routeUserId]);
+
+  const handleProfileFieldChange = (field, value) => {
+    setProfileForm((prev) => ({
+      ...prev,
+      [field]: value,
+    }));
+  };
 
   const handleSocialLinkChange = (platform, value) => {
     setSocialLinks((prev) => ({
@@ -260,15 +706,43 @@ function EditProfilePage() {
     );
   };
 
-  const handleRemoveSkill = (skillId) => {
-    setSkills((prev) => prev.filter((skill) => skill.id !== skillId));
+  const handleRemoveSkill = async (skillId) => {
+    setSaveError('');
+    setSaveSuccess('');
+
+    const targetSkill = skills.find((skill) => skill.id === skillId);
+
+    if (!targetSkill) {
+      return;
+    }
+
+    if (!targetSkill.backendSkillId || !canUpdateProfile || !resolvedUserId) {
+      setSkills((prev) => prev.filter((skill) => skill.id !== skillId));
+      return;
+    }
+
+    setRemovingSkillIds((prev) => [...prev, skillId]);
+
+    try {
+      await removeSkillFromUser(resolvedUserId, targetSkill.backendSkillId);
+      setSkills((prev) => prev.filter((skill) => skill.id !== skillId));
+      setSaveSuccess('Skill removed successfully.');
+    } catch (error) {
+      const apiMessage =
+        error?.response?.data?.message ||
+        error?.response?.data?.detail ||
+        error?.message;
+      setSaveError(apiMessage || 'Unable to remove skill. Please try again.');
+    } finally {
+      setRemovingSkillIds((prev) => prev.filter((id) => id !== skillId));
+    }
   };
 
   const handleAddSkill = () => {
     const nextSkillId = `skill-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`;
     setSkills((prev) => [
       ...prev,
-      { id: nextSkillId, title: '', description: '' },
+      { id: nextSkillId, backendSkillId: null, title: '', description: '' },
     ]);
   };
 
@@ -331,12 +805,246 @@ function EditProfilePage() {
     setEducationList((prev) => prev.filter((item) => item.id !== educationId));
   };
 
+  const syncNewSkillsWithBackend = async (targetUserId) => {
+    const nextSkills = [...skills];
+    const syncErrors = [];
+
+    for (let index = 0; index < nextSkills.length; index += 1) {
+      const currentSkill = nextSkills[index];
+
+      if (currentSkill?.backendSkillId) {
+        continue;
+      }
+
+      const title = getOptionalValue(currentSkill?.title);
+      const description = getOptionalValue(currentSkill?.description);
+
+      if (!title || !description) {
+        syncErrors.push(`${title || 'Untitled skill'} is missing title or description.`);
+        continue;
+      }
+
+      try {
+        const createResponse = await createSkill({
+          name: title,
+          description,
+        });
+
+        const createdSkillId = extractCreatedSkillId(createResponse);
+        if (!createdSkillId) {
+          throw new Error('Created skill id is missing in response.');
+        }
+
+        await assignSkillToUser(targetUserId, createdSkillId);
+
+        nextSkills[index] = {
+          ...currentSkill,
+          backendSkillId: createdSkillId,
+        };
+      } catch (error) {
+        const apiMessage =
+          error?.response?.data?.message ||
+          error?.response?.data?.detail ||
+          error?.message;
+        syncErrors.push(`${title}: ${apiMessage || 'Unable to sync skill.'}`);
+      }
+    }
+
+    return { nextSkills, syncErrors };
+  };
+
+  const syncSocialMediaLinksWithBackend = async (targetUserId) => {
+    const nextExistingSocialLinks = [...existingSocialMediaLinks];
+    const syncErrors = [];
+
+    for (const platform of SOCIAL_PLATFORMS) {
+      const inputValue = getOptionalValue(socialLinks[platform]);
+      if (!inputValue) {
+        continue;
+      }
+
+      const normalizedPlatform = getNormalizedPlatformName(platform);
+      const alreadyExists = nextExistingSocialLinks.some((item) => {
+        const existingLink = getOptionalValue(item?.value || item?.link);
+        if (existingLink !== inputValue) {
+          return false;
+        }
+
+        const existingPlatform = getNormalizedPlatformName(item?.icon || item?.label);
+        return existingPlatform ? existingPlatform === normalizedPlatform : true;
+      });
+
+      if (alreadyExists) {
+        continue;
+      }
+
+      try {
+        const createResponse = await createSocialMediaLink({
+          user_id: targetUserId,
+          link: inputValue,
+          icon: platform,
+        });
+
+        const createdLinks = mapSocialMediaLinksApiResponse([createResponse]);
+        if (createdLinks.length) {
+          nextExistingSocialLinks.push(createdLinks[0]);
+        } else {
+          nextExistingSocialLinks.push({
+            id: `social-${Date.now()}-${Math.random().toString(16).slice(2, 8)}`,
+            label: platform,
+            icon: platform,
+            value: inputValue,
+            href: getUrlWithProtocol(inputValue),
+          });
+        }
+      } catch (error) {
+        const apiMessage =
+          error?.response?.data?.message ||
+          error?.response?.data?.detail ||
+          error?.message;
+        syncErrors.push(`${platform}: ${apiMessage || 'Unable to sync social link.'}`);
+      }
+    }
+
+    return { nextExistingSocialLinks, syncErrors };
+  };
+
+  const handleSaveProfile = async (event) => {
+    event.preventDefault();
+    setSaveError('');
+    setSaveSuccess('');
+
+    const firstName = getOptionalValue(profileForm.firstName);
+    const lastName = getOptionalValue(profileForm.lastName);
+    const email = getOptionalValue(profileForm.email);
+
+    if (!firstName || !lastName || !email) {
+      setSaveError('First name, last name, and email are required.');
+      return;
+    }
+
+    if (!canUpdateProfile || !resolvedUserId) {
+      setSaveError('Profile update is not available for this user.');
+      return;
+    }
+
+    const birthdateValue = getOptionalValue(profileForm.birthdate);
+    const genderValue = getOptionalValue(profileForm.gender).toLowerCase();
+    const locationValue = getOptionalValue(profileForm.location);
+    const bioValue = getOptionalValue(profileForm.bio);
+    const statusValue = getOptionalValue(profileForm.status).toLowerCase() || 'active';
+    const birthdayAt = birthdateValue
+      ? new Date(`${birthdateValue}T00:00:00.000Z`).toISOString()
+      : null;
+
+    const payload = {
+      first_name: firstName,
+      last_name: lastName,
+      email,
+      status: statusValue,
+      birthday_at: birthdayAt,
+      gender: genderValue || null,
+      location: locationValue || null,
+      bio: bioValue || null,
+    };
+
+    try {
+      setIsSavingProfile(true);
+      const response = await updateUserProfile(resolvedUserId, payload);
+
+      if (response?.status !== 'success') {
+        setSaveError('Unable to update profile. Please try again.');
+        return;
+      }
+
+      const updatedApiUser = {
+        ...(response?.data || {}),
+        id: response?.data?.id || resolvedUserId,
+        first_name: response?.data?.first_name || firstName,
+        last_name: response?.data?.last_name || lastName,
+        email: response?.data?.email || email,
+        status: response?.data?.status || statusValue,
+        birthday_at: response?.data?.birthday_at || birthdayAt,
+        gender: response?.data?.gender ?? genderValue,
+        location: response?.data?.location ?? locationValue,
+        bio: response?.data?.bio ?? bioValue,
+        created_at: response?.data?.created_at || null,
+      };
+
+      const nextProfileForm = mapApiUserToProfileForm(updatedApiUser);
+      const fallbackDisplayName = [firstName, lastName].filter(Boolean).join(' ') || email;
+      const mappedSidebarUser = mapApiUserToSidebarModel(updatedApiUser);
+      const { nextSkills, syncErrors } = await syncNewSkillsWithBackend(
+        updatedApiUser.id || resolvedUserId
+      );
+      const {
+        nextExistingSocialLinks,
+        syncErrors: socialSyncErrors,
+      } = await syncSocialMediaLinksWithBackend(updatedApiUser.id || resolvedUserId);
+      const hasUpdatedJoinedAt = Boolean(response?.data?.created_at);
+      const nextSidebarModel = {
+        ...(user || {}),
+        ...mappedSidebarUser,
+        id: updatedApiUser.id || resolvedUserId,
+        displayName: mappedSidebarUser.displayName || fallbackDisplayName,
+        fullName: mappedSidebarUser.fullName || fallbackDisplayName,
+        username: mappedSidebarUser.username || `@${email.split('@')[0] || 'user'}`,
+        joinedAt: hasUpdatedJoinedAt
+          ? mappedSidebarUser.joinedAt
+          : user?.joinedAt || mappedSidebarUser.joinedAt || 'Unknown date',
+        socialLinks: nextExistingSocialLinks.length
+          ? nextExistingSocialLinks
+          : mappedSidebarUser.socialLinks.length
+            ? mappedSidebarUser.socialLinks
+            : user?.socialLinks || [],
+        skills: nextSkills,
+      };
+
+      setProfileForm(nextProfileForm);
+      setUser(nextSidebarModel);
+      setExistingSocialMediaLinks(nextExistingSocialLinks);
+      setSkills(nextSkills);
+      setResolvedUserId(updatedApiUser.id || resolvedUserId);
+      setCanUpdateProfile(true);
+
+      const combinedSyncErrors = [...syncErrors, ...socialSyncErrors];
+      if (combinedSyncErrors.length) {
+        setSaveError(
+          `Profile updated, but ${combinedSyncErrors.length} item(s) could not be synced. ${combinedSyncErrors[0]}`
+        );
+        return;
+      }
+
+      setSaveSuccess('Profile, skills, and social links updated successfully.');
+    } catch (error) {
+      const apiMessage =
+        error?.response?.data?.message ||
+        error?.response?.data?.detail ||
+        error?.message;
+      setSaveError(apiMessage || 'Unable to update profile. Please try again.');
+    } finally {
+      setIsSavingProfile(false);
+    }
+  };
+
+  if (isLoadingProfile) {
+    return (
+      <main className="user-details-page">
+        <HomeTopBar />
+        <section className="user-status-card">
+          <h1>Loading profile...</h1>
+        </section>
+      </main>
+    );
+  }
+
   if (!user) {
     return (
       <main className="user-details-page">
         <HomeTopBar />
         <section className="user-missing">
           <h1>User not found</h1>
+          {loadError ? <p className="user-missing-error">{loadError}</p> : null}
           <Link to="/home" className="btn btn-primary">
             Back to home
           </Link>
@@ -350,11 +1058,15 @@ function EditProfilePage() {
       <HomeTopBar />
 
       <div className="user-profile-layout">
-        <ProfileSidebar user={user} activeSection="" editTarget="/editprofile" />
+        <ProfileSidebar
+          user={user}
+          activeSection=""
+          editTarget={resolvedUserId ? `/editprofile/${resolvedUserId}` : '/editprofile'}
+        />
 
-        <form className="edit-right-column" onSubmit={(event) => event.preventDefault()}>
+        <form className="edit-right-column" onSubmit={handleSaveProfile}>
           <p className="edit-heading-row">
-            <Link to={`/user/${user.id}/`} className="edit-back-link">
+            <Link to={user.id ? `/user/${user.id}/` : '/home'} className="edit-back-link">
               &larr;
             </Link>
             <span>Edit Profile</span>
@@ -379,11 +1091,19 @@ function EditProfilePage() {
             <div className="form-grid two-col">
               <label className="field">
                 <span>First Name</span>
-                <input defaultValue="John" required />
+                <input
+                  value={profileForm.firstName}
+                  onChange={(event) => handleProfileFieldChange('firstName', event.target.value)}
+                  required
+                />
               </label>
               <label className="field">
                 <span>Last Name</span>
-                <input defaultValue="Doe" required />
+                <input
+                  value={profileForm.lastName}
+                  onChange={(event) => handleProfileFieldChange('lastName', event.target.value)}
+                  required
+                />
               </label>
             </div>
 
@@ -391,33 +1111,50 @@ function EditProfilePage() {
               <span>Bio</span>
               <textarea
                 rows="4"
-                defaultValue="Quiquia est dolorem consectetur ipsum labore. Dolor quisquam consectetur dolor quiquia consectetur est consectetur. Est dolore porro labore tempora sit ut. Eius aliquam adipisci dolore. Velit labore quiquia magnam etincidunt quisquam. Etincidunt numquam velit est sit. Eius porro modi aliquam dolore dolor. Modi magnam sed consectetur dolorem sit sit."
-                required
+                value={profileForm.bio}
+                onChange={(event) => handleProfileFieldChange('bio', event.target.value)}
               />
             </label>
 
             <div className="form-grid two-col">
               <label className="field">
                 <span>Gender</span>
-                <select defaultValue="Male" required>
-                  <option>Male</option>
-                  <option>Female</option>
+                <select
+                  value={profileForm.gender}
+                  onChange={(event) => handleProfileFieldChange('gender', event.target.value)}
+                >
+                  <option value="">Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
                 </select>
               </label>
               <label className="field">
                 <span>Birthdate</span>
-                <input type="date" defaultValue="2001-01-15" required />
+                <input
+                  type="date"
+                  value={profileForm.birthdate}
+                  onChange={(event) => handleProfileFieldChange('birthdate', event.target.value)}
+                />
               </label>
             </div>
 
             <div className="form-grid two-col">
               <label className="field">
                 <span>Email</span>
-                <input type="email" defaultValue="Johndoe@gamil.com" required />
+                <input
+                  type="email"
+                  value={profileForm.email}
+                  onChange={(event) => handleProfileFieldChange('email', event.target.value)}
+                  required
+                />
               </label>
               <label className="field">
                 <span>Location</span>
-                <input type="text" defaultValue="Addis Ababa" required />
+                <input
+                  type="text"
+                  value={profileForm.location}
+                  onChange={(event) => handleProfileFieldChange('location', event.target.value)}
+                />
               </label>
             </div>
           </article>
@@ -446,6 +1183,7 @@ function EditProfilePage() {
                   skill={skill}
                   onChange={handleSkillChange}
                   onRemove={handleRemoveSkill}
+                  isRemoving={removingSkillIds.includes(skill.id)}
                 />
               ))}
             </div>
@@ -503,9 +1241,17 @@ function EditProfilePage() {
             </div>
           </article>
 
+          {loadError ? <p className="edit-feedback edit-feedback-warning">{loadError}</p> : null}
+          {saveError ? <p className="edit-feedback edit-feedback-error">{saveError}</p> : null}
+          {saveSuccess ? <p className="edit-feedback edit-feedback-success">{saveSuccess}</p> : null}
+
           <div className="edit-page-actions">
-            <button type="submit" className="btn btn-success save-btn">
-              Save Changes
+            <button
+              type="submit"
+              className="btn btn-success save-btn"
+              disabled={isSavingProfile || !canUpdateProfile}
+            >
+              {isSavingProfile ? 'Saving...' : 'Save Changes'}
             </button>
             <button type="button" className="btn btn-outline cancel-btn">
               Cancel

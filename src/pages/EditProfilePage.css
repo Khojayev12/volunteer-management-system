@@ -199,6 +199,11 @@
   cursor: pointer;
 }
 
+.remove-item-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 .skills-edit-list {
   display: grid;
   gap: 14px;
@@ -365,6 +370,23 @@
   align-items: center;
   gap: 10px;
   margin-top: 6px;
+}
+
+.edit-feedback {
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.edit-feedback-warning {
+  color: #805a18;
+}
+
+.edit-feedback-error {
+  color: #9a3f33;
+}
+
+.edit-feedback-success {
+  color: #1f6b43;
 }
 
 .save-btn,

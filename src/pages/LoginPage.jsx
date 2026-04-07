@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import headerLogo from '../assets/images/header-logo.png';
 import { loginUser } from '../services/api/authApi';
+import { saveSessionFromUser } from '../services/session/sessionManager';
 import './LoginPage.css';
 
 function LoginPage() {
@@ -37,6 +38,7 @@ function LoginPage() {
       });
 
       if (response?.status === 'success') {
+        saveSessionFromUser(response?.data);
         navigate('/home', { replace: true });
       } else {
         setSubmitError('Unable to login. Please try again.');

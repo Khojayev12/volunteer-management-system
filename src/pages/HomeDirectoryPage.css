@@ -123,6 +123,21 @@
   gap: 12px;
 }
 
+.home-events-feedback {
+  margin: 0;
+  padding: 12px 14px;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background: var(--color-surface);
+  color: #334550;
+  font-size: 0.94rem;
+}
+
+.home-events-feedback-error {
+  border-color: #d9a099;
+  color: #9a3f33;
+}
+
 @media (max-width: 1024px) {
   .home-directory-content {
     grid-template-columns: 1fr;

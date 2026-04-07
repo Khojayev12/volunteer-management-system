@@ -80,6 +80,12 @@
   gap: 10px;
 }
 
+.social-links-empty {
+  margin: 0;
+  font-size: 0.92rem;
+  color: #4d5d68;
+}
+
 .social-links-block li {
   display: flex;
   align-items: center;

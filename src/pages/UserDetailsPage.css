@@ -138,6 +138,13 @@
   color: #3d4a55;
 }
 
+.user-empty-note {
+  margin: 0;
+  font-size: 0.94rem;
+  color: #4d5d68;
+}
+
+.user-status-card,
 .user-missing {
   max-width: 620px;
   margin: 40px auto;
@@ -150,6 +157,11 @@
 .user-missing h1 {
   margin: 0 0 12px;
   line-height: 1.2;
+}
+
+.user-missing-error {
+  margin: 0 0 12px;
+  color: #9a3f33;
 }
 
 @media (max-width: 1024px) {

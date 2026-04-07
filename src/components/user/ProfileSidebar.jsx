@@ -2,6 +2,10 @@ import { Link } from 'react-router-dom';
 import './ProfileSidebar.css';
 
 function ProfileSidebar({ user, activeSection = 'profile', editTarget = '/editprofile' }) {
+  const availableSocialLinks = (user.socialLinks || []).filter((linkItem) =>
+    String(linkItem?.href || linkItem?.value || '').trim()
+  );
+
   return (
     <aside className="user-left-column">
       <section className="profile-card">
@@ -23,16 +27,22 @@ function ProfileSidebar({ user, activeSection = 'profile', editTarget = '/editpr
 
         <div className="social-links-block">
           <h2>Social Links</h2>
-          <ul>
-            {user.socialLinks.map((linkItem) => (
-              <li key={linkItem.id}>
-                <span className="social-icon" aria-hidden="true">
-                  icon
-                </span>
-                <a href={linkItem.value}>{linkItem.value}</a>
-              </li>
-            ))}
-          </ul>
+          {availableSocialLinks.length ? (
+            <ul>
+              {availableSocialLinks.map((linkItem) => (
+                <li key={linkItem.id}>
+                  <span className="social-icon" aria-hidden="true">
+                    icon
+                  </span>
+                  <a href={linkItem.href || linkItem.value} target="_blank" rel="noreferrer">
+                    {linkItem.value}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="social-links-empty">No social links added yet.</p>
+          )}
         </div>
       </section>
 

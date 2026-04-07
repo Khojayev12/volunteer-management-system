@@ -1,0 +1,11 @@
+import apiClient from './client';
+
+export const getUserProfile = async (userId) => {
+  const response = await apiClient.get(`/users/${userId}`);
+  return response.data;
+};
+
+export const updateUserProfile = async (userId, payload) => {
+  const response = await apiClient.patch(`/users/${userId}`, payload);
+  return response.data;
+};

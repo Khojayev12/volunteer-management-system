@@ -1,19 +1,144 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import FilterGroup from '../components/home/FilterGroup';
 import FilterTag from '../components/home/FilterTag';
 import HomeTopBar from '../components/home/HomeTopBar';
 import OpportunityCard from '../components/home/OpportunityCard';
+import { getEvents } from '../services/api/eventsApi';
+import { getOrganizationById } from '../services/api/organizationsApi';
 import {
-  homeOpportunities,
   locationOptions,
   timePreferenceOptions,
 } from '../constants/homeDashboardData';
 import './HomeDirectoryPage.css';
 
+const formatEventDate = (value) => {
+  if (!value) {
+    return 'Unknown date';
+  }
+
+  const parsedDate = new Date(value);
+  if (Number.isNaN(parsedDate.getTime())) {
+    return 'Unknown date';
+  }
+
+  return parsedDate.toLocaleDateString('en-US', {
+    month: 'short',
+    day: '2-digit',
+    year: 'numeric',
+  });
+};
+
+const mapEventToOpportunity = (eventItem, organizationNameMap = {}) => {
+  const title = String(eventItem?.title || '').trim() || 'Untitled event';
+  const description =
+    String(eventItem?.description || '').trim() || 'No description provided.';
+  const location = String(eventItem?.location || '').trim() || 'Unknown location';
+  const status = String(eventItem?.status || '').trim() || 'Unknown status';
+  const organizationId = String(eventItem?.organization_id || '').trim();
+  const organizationName = organizationNameMap[organizationId];
+  const capacityValue = Number(eventItem?.capacity);
+  const capacityLabel = Number.isFinite(capacityValue)
+    ? `${capacityValue} volunteers`
+    : 'Capacity N/A';
+
+  return {
+    id: String(eventItem?.id || ''),
+    title,
+    organization:
+      organizationName || `Org ${organizationId.slice(0, 8) || 'N/A'}`,
+    description,
+    badges: [
+      location,
+      status,
+      `Start: ${formatEventDate(eventItem?.start_date)}`,
+      `End: ${formatEventDate(eventItem?.end_date)}`,
+      capacityLabel,
+    ],
+  };
+};
+
 function HomeDirectoryPage() {
   const [cityFilters, setCityFilters] = useState([]);
   const [selectedLocation, setSelectedLocation] = useState('');
   const [selectedTimePreferences, setSelectedTimePreferences] = useState([]);
+  const [events, setEvents] = useState([]);
+  const [isLoadingEvents, setIsLoadingEvents] = useState(true);
+  const [eventsError, setEventsError] = useState('');
+
+  useEffect(() => {
+    let isActive = true;
+
+    const fetchEvents = async () => {
+      setIsLoadingEvents(true);
+      setEventsError('');
+
+      try {
+        const response = await getEvents();
+        const rawEvents = Array.isArray(response?.data)
+          ? response.data
+          : Array.isArray(response)
+            ? response
+            : [];
+        const uniqueOrganizationIds = [
+          ...new Set(
+            rawEvents
+              .map((eventItem) => String(eventItem?.organization_id || '').trim())
+              .filter(Boolean)
+          ),
+        ];
+        const organizationNameMap = {};
+
+        if (uniqueOrganizationIds.length) {
+          const organizationResults = await Promise.allSettled(
+            uniqueOrganizationIds.map((organizationId) =>
+              getOrganizationById(organizationId)
+            )
+          );
+
+          organizationResults.forEach((result, index) => {
+            if (result.status !== 'fulfilled') {
+              return;
+            }
+
+            const organizationId = uniqueOrganizationIds[index];
+            const organizationName = String(result.value?.data?.name || '').trim();
+
+            if (organizationId && organizationName) {
+              organizationNameMap[organizationId] = organizationName;
+            }
+          });
+        }
+
+        const mappedEvents = rawEvents
+          .map((eventItem) => mapEventToOpportunity(eventItem, organizationNameMap))
+          .filter((eventItem) => eventItem.id);
+
+        if (isActive) {
+          setEvents(mappedEvents);
+        }
+      } catch (error) {
+        const apiMessage =
+          error?.response?.data?.message ||
+          error?.response?.data?.detail ||
+          error?.message;
+
+        if (isActive) {
+          setEvents([]);
+          setEventsError(apiMessage || 'Unable to load events.');
+        }
+      } finally {
+        if (isActive) {
+          setIsLoadingEvents(false);
+        }
+      }
+    };
+
+    fetchEvents();
+
+    return () => {
+      isActive = false;
+    };
+  }, []);
 
   const selectedLocationTags = useMemo(
     () =>
@@ -146,9 +271,23 @@ function HomeDirectoryPage() {
           </form>
 
           <div className="opportunities-list">
-            {homeOpportunities.map((opportunity) => (
-              <OpportunityCard key={opportunity.id} {...opportunity} />
-            ))}
+            {isLoadingEvents ? <p className="home-events-feedback">Loading events...</p> : null}
+
+            {!isLoadingEvents && eventsError ? (
+              <p className="home-events-feedback home-events-feedback-error" role="alert">
+                {eventsError}
+              </p>
+            ) : null}
+
+            {!isLoadingEvents && !eventsError && !events.length ? (
+              <p className="home-events-feedback">No events available right now.</p>
+            ) : null}
+
+            {!isLoadingEvents && !eventsError
+              ? events.map((opportunity) => (
+                  <OpportunityCard key={opportunity.id} {...opportunity} />
+                ))
+              : null}
           </div>
         </section>
       </div>

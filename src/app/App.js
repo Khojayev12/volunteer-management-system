@@ -40,6 +40,7 @@ function AppContent() {
         <Route path="/oppotunity/:opportunityId/" element={<OpportunityDetailsPage />} />
         <Route path="/user/:userId/" element={<UserDetailsPage />} />
         <Route path="/editprofile" element={<EditProfilePage />} />
+        <Route path="/editprofile/:userId" element={<EditProfilePage />} />
         <Route path="/signup" element={<SignUpPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/contactus" element={<ContactUsPage />} />
