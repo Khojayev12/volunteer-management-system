@@ -220,11 +220,9 @@
   border: 2px solid rgba(23, 28, 34, 0.35);
   border-radius: var(--radius-sm);
   background: rgba(234, 245, 253, 0.62);
-  display: grid;
-  place-items: center;
-  text-align: center;
-  gap: 12px;
-  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  padding: 0;
   transition: transform 220ms ease, box-shadow 220ms ease;
 }
 
@@ -233,17 +231,25 @@
   box-shadow: 0 14px 26px rgba(17, 50, 73, 0.25);
 }
 
-.benefits-video-placeholder span:last-child {
-  font-weight: 700;
-  color: #33566d;
+.benefits-video-poster {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+  object-fit: cover;
+  display: block;
 }
 
 .video-play-icon {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
   width: 34px;
   height: 34px;
-  border: 2px solid #4e5e6a;
+  border: 2px solid rgba(255, 255, 255, 0.9);
   border-radius: 50%;
-  color: #4e5e6a;
+  color: #ffffff;
+  background: rgba(10, 22, 33, 0.4);
   display: inline-flex;
   align-items: center;
   justify-content: center;

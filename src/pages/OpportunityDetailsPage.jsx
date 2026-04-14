@@ -169,10 +169,7 @@ function OpportunityDetailsPage() {
 
     try {
       setIsApplying(true);
-      const response = await registerForEvent({
-        event_id: eventRecord.id,
-        volunteer_id: volunteerId,
-      });
+      const response = await registerForEvent(eventRecord.id, volunteerId);
 
       if (response?.status && String(response.status).toLowerCase() !== 'success') {
         setApplyError('Unable to apply for this event. Please try again.');

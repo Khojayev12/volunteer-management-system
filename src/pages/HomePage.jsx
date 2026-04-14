@@ -4,6 +4,7 @@ import { projects, stats } from '../constants/homePageData';
 import { Link } from 'react-router-dom';
 import homeHeroIllustration from '../assets/images/home-hero-illustration.png';
 import homeMissionIllustration from '../assets/images/home-mission-illustration.png';
+import youtubePoster from '../assets/images/youtube-poster.jpg';
 import './HomePage.css';
 
 function HomePage() {
@@ -104,10 +105,14 @@ function HomePage() {
           <div
             className="benefits-video-placeholder"
             role="img"
-            aria-label="Volunteer benefits video placeholder"
+            aria-label="Volunteer benefits video poster"
           >
+            <img
+              src={youtubePoster}
+              alt="Volunteer benefits video poster"
+              className="benefits-video-poster"
+            />
             <span className="video-play-icon">&#9654;</span>
-            <span>Place video preview: home-volunteer-benefits-video.png</span>
           </div>
         </div>
       </section>

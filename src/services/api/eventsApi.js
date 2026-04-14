@@ -10,7 +10,11 @@ export const getEventById = async (eventId) => {
   return response.data;
 };
 
-export const registerForEvent = async (payload) => {
-  const response = await apiClient.post('/events/register', payload);
+export const registerForEvent = async (eventId, volunteerId) => {
+  const normalizedEventId = encodeURIComponent(String(eventId || '').trim());
+  const normalizedVolunteerId = encodeURIComponent(String(volunteerId || '').trim());
+  const response = await apiClient.post(
+    `/participants/${normalizedEventId}/participants/add/${normalizedVolunteerId}`
+  );
   return response.data;
 };

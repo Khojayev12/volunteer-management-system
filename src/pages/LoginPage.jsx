@@ -37,7 +37,10 @@ function LoginPage() {
         password,
       });
 
-      if (response?.status === 'success') {
+      const isLoginSuccessful =
+        String(response?.status || '').toLowerCase() === 'success';
+
+      if (isLoginSuccessful) {
         saveSessionFromUser(response?.data);
         navigate('/home', { replace: true });
       } else {

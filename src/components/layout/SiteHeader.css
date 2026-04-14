@@ -37,6 +37,12 @@
   transform: translateY(-1px);
 }
 
+.site-nav-links .site-signin-link,
+.site-nav-links .site-signin-link:hover,
+.site-nav-links .site-signin-link:focus-visible {
+  color: #ffffff;
+}
+
 @media (max-width: 700px) {
   .site-header {
     flex-direction: column;
